@@ -18,6 +18,29 @@ python analysis.py
 
 **Results:** written to `results.json`. Charts are saved to `figures/`.
 
+## Results (latest run)
+
+On the public UCI Heart Failure Clinical Records stand-in dataset, a standard k-means cluster-rate risk model reached ROC-AUC 0.586 on the held-out test set, while a class-balanced, isotonic-calibrated LightGBM reached 0.775 (mean over three seeds, 75 test patients).
+
+| Metric | Value |
+|---|---|
+| baseline_score | 0.5858 |
+| improved_score | 0.7751 |
+| improvement | 0.1893 |
+| baseline_score_std | 0.0396 |
+| improved_score_std | 0.005683 |
+| baseline_brier | 0.2178 |
+| improved_brier | 0.1802 |
+| baseline_brier_std | 0.005666 |
+| improved_brier_std | 0.002511 |
+| baseline_balanced_accuracy | 0.5486 |
+| improved_balanced_accuracy | 0.7267 |
+| improved_cv_roc_auc | 0.744 |
+
+Run on 2026-10-21. Full output: [results.json](results.json) · [run.log](run.log)
+
+Notes: Stand-in dataset, not the paper's pneumonia ICU data; the paper's result is not reproduced here. Small sample, so test estimates are noisy. 'time' (follow-up duration) is excluded as post-outcome leakage. Dataset is small enough that no subsampling was needed. Hyperparameters were chosen by CV on train only with seed 42. Isotonic calibration uses out-of-fold predictions from 80% models, applied to the full-train model. Brier and balanced accuracy use the training prevalence as threshold. Test set used once.
+
 ## Reference
 
 This project is motivated by the following paper:
