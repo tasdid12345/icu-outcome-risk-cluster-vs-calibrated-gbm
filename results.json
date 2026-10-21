@@ -1,0 +1,32 @@
+{
+  "question": "Can a class-balanced, isotonic-calibrated gradient-boosting model give better-ranked and better-calibrated patient mortality risk than a k-means cluster-rate baseline on a public ICU-style dataset?",
+  "method": "Stratified 75/25 split (seed 42); preprocessing fit on train only. Baseline: k-means on standardized features, k chosen by silhouette on train, test patients get the train death rate of their cluster. Improved: class-balanced LightGBM (hyperparameters by 5-fold CV on train), isotonic calibration fit on out-of-fold train predictions. Test set used once. Seeds 42/43/44; mean and std reported.",
+  "dataset": {
+    "name": "UCI Heart Failure Clinical Records (ICU-style stand-in)",
+    "source_url": "https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records",
+    "n_rows": 299,
+    "n_train": 224,
+    "n_test": 75,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "ROC-AUC on held-out test set (mean over seeds 42, 43, 44)",
+  "higher_is_better": true,
+  "baseline": "k-means cluster analysis on standardized features; test risk = training death rate of cluster (k by silhouette)",
+  "improved": "class-balanced LightGBM (CV-tuned on train) with isotonic calibration fit on out-of-fold train predictions",
+  "metrics": {
+    "baseline_score": 0.5857843137254902,
+    "improved_score": 0.7750544662309368,
+    "improvement": 0.18927015250544654,
+    "baseline_score_std": 0.039601014047049514,
+    "improved_score_std": 0.005683179944092904,
+    "baseline_brier": 0.21784139380293752,
+    "improved_brier": 0.180168587636955,
+    "baseline_brier_std": 0.005665718716824836,
+    "improved_brier_std": 0.002511223477120414,
+    "baseline_balanced_accuracy": 0.548611111111111,
+    "improved_balanced_accuracy": 0.72671568627451,
+    "improved_cv_roc_auc": 0.7440174091141833
+  },
+  "notes": "Stand-in dataset, not the paper's pneumonia ICU data; the paper's result is not reproduced here. Small sample, so test estimates are noisy. 'time' (follow-up duration) is excluded as post-outcome leakage. Dataset is small enough that no subsampling was needed. Hyperparameters were chosen by CV on train only with seed 42. Isotonic calibration uses out-of-fold predictions from 80% models, applied to the full-train model. Brier and balanced accuracy use the training prevalence as threshold. Test set used once."
+}
